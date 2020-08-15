@@ -1,17 +1,18 @@
 import Snoowrap, { SnoowrapOptions } from "snoowrap"
+import { error } from "console"
 
 class CheatWrap {
   queue: Snoowrap[]
 
-  constructor() {
-    this.queue = []
+  constructor(creds: SnoowrapOptions[]) {
+    this.queue = CheatWrap.init(creds)
+    console.log("Initialization completed")
   }
 
-  async init(creds: SnoowrapOptions[]) {
-    for (const cred of creds) {
-      this.queue.push(await new Snoowrap(cred))
-    }
-    return this
+  private static init(creds: SnoowrapOptions[]) {
+    return creds.map((cred) => {
+      return new Snoowrap(cred)
+    })
   }
 
   static limitMessage =
@@ -38,23 +39,67 @@ class CheatWrap {
       }
       return b.ratelimitExpiration - a.ratelimitExpiration
     })
+    const result = this.queue[0]
 
-    return this.queue[0]
+    console.log("Instance chosen from ")
+    console.log(this.queue)
+
+    return result.ratelimitRemaining > 0 || result.ratelimitRemaining == null
+      ? result
+      : error(
+          "All instances are exhausted, remaining time: " +
+            result.ratelimitExpiration
+        )
   }
 
   async run(
     method: (instance: Snoowrap) => any,
+    retries: { current: number; max: number } = { current: 0, max: 1 },
     identifier?: keyof Snoowrap,
     identifierResult?: any
   ) {
-    console.log(method(this.getInstance(identifier, identifierResult)))
+    const instance = this.getInstance(identifier, identifierResult)
+
+    if (instance) {
+      return CheatWrap.runner(method, retries, instance)
+    }
+  }
+
+  private static async runner(
+    method: (instance: Snoowrap) => any,
+    { current, max }: { current: number; max: number },
+    instance: Snoowrap
+  ): Promise<any> {
+    console.log(
+      "Running method for the " + current + " of maximum " + max + " allowed"
+    )
+    let result
     try {
-      return await method(this.getInstance(identifier, identifierResult))
+      result = await method(instance)
     } catch ({ message }) {
       if (message === CheatWrap.limitMessage) {
-        return await method(this.getInstance(identifier, identifierResult))
+        console.log("Limit Reached - changning accounts")
+        return await CheatWrap.runner(
+          method(instance),
+          {
+            current: current,
+            max,
+          },
+          instance
+        )
       }
+      if (current < max) {
+        console.log("error accours, retrying")
+        return await CheatWrap.runner(
+          method,
+          { current: current + 1, max: max },
+          instance
+        )
+      }
+      return error("Taks failed")
     }
+    console.log("Method sucessfully completed")
+    return result
   }
 }
 
