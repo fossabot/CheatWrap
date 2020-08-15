@@ -1,0 +1,27 @@
+{
+  "name": "cheatwrap",
+  "version": "1.0.0",
+  "description": "reddit, snoowrap",
+  "main": "./dsc/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/magicaltoast/CheatWrap.git"
+  },
+  "keywords": [
+    "reddit",
+    "snoowrap"
+  ],
+  "author": "magicaltoast",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/magicaltoast/CheatWrap/issues"
+  },
+  "homepage": "https://github.com/magicaltoast/CheatWrap#readme",
+  "dependencies": {
+    "snoowrap": "^1.21.0",
+    "typescript": "^3.9.7"
+  }
+}
