@@ -1,7 +1,7 @@
 {
   "name": "cheatwrap",
   "version": "1.0.0",
-  "description": "reddit, snoowrap",
+  "description": "Wrapper around snoowrap allowing the use of multiple API keys to bypass the limitation of a single key",
   "main": "./dsc/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -27,5 +27,8 @@
   },
   "devDependencies": {
     "dotenv": "^8.2.0"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com/"
   }
 }
