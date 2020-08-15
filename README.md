@@ -2,7 +2,9 @@
 Wrapper around [snoowrap](https://github.com/not-an-aardvark/snoowrap) allowing the use of multiple API keys to bypass the limitation of a single key
 ## Installation
 
-
+```bash
+npm i cheatwrap
+```
 
 ## Example 
 ```typescript
