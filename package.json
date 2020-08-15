@@ -23,5 +23,6 @@
   "dependencies": {
     "snoowrap": "^1.21.0",
     "typescript": "^3.9.7"
-  }
+  },
+  "devDependencies": {}
 }

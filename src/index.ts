@@ -3,14 +3,15 @@ import Snoowrap, { SnoowrapOptions } from "snoowrap"
 class CheatWrap {
   queue: Snoowrap[]
 
-  constructor(creds: SnoowrapOptions[]) {
-    this.queue = CheatWrap.getObjects(creds)
+  constructor() {
+    this.queue = []
   }
 
-  private static getObjects(creds: SnoowrapOptions[]) {
-    return creds.map((cred) => {
-      return new Snoowrap(cred)
-    })
+  async init(creds: SnoowrapOptions[]) {
+    for (const cred of creds) {
+      this.queue.push(await new Snoowrap(cred))
+    }
+    return this
   }
 
   static limitMessage =
@@ -41,17 +42,17 @@ class CheatWrap {
     return this.queue[0]
   }
 
-  client(
+  async run(
     method: (instance: Snoowrap) => any,
     identifier?: keyof Snoowrap,
     identifierResult?: any
   ) {
+    console.log(method(this.getInstance(identifier, identifierResult)))
     try {
-      return method(this.getInstance(identifier, identifierResult))
+      return await method(this.getInstance(identifier, identifierResult))
     } catch ({ message }) {
       if (message === CheatWrap.limitMessage) {
-                return method(this.getInstance(identifier, identifierResult))
-
+        return await method(this.getInstance(identifier, identifierResult))
       }
     }
   }
