@@ -1,17 +1,17 @@
-import Snoowrap, { SnoowrapOptions } from "snoowrap"
-import { error } from "console"
+import Snoowrap from "snoowrap"
+import SuperSnoowrap, { SuperSnoowrapOptions } from "./snoowrapProxy"
 
 class CheatWrap {
   queue: Snoowrap[]
 
-  constructor(creds: SnoowrapOptions[]) {
+  constructor(creds: SuperSnoowrapOptions[]) {
     this.queue = CheatWrap.init(creds)
     console.log("Initialization completed")
   }
 
-  private static init(creds: SnoowrapOptions[]) {
+  private static init(creds: SuperSnoowrapOptions[]) {
     return creds.map((cred) => {
-      return new Snoowrap(cred)
+      return new SuperSnoowrap(cred)
     })
   }
 
@@ -44,12 +44,10 @@ class CheatWrap {
     console.log("Instance chosen from ")
     console.log(this.queue)
 
-    return result.ratelimitRemaining > 0 || result.ratelimitRemaining == null
-      ? result
-      : error(
-          "All instances are exhausted, remaining time: " +
-            result.ratelimitExpiration
-        )
+    if (!(result.ratelimitRemaining > 0 || result.ratelimitRemaining == null)) {
+      throw "All instances all exhausted"
+    }
+    return result
   }
 
   async run(
@@ -96,7 +94,7 @@ class CheatWrap {
           instance
         )
       }
-      return error("Taks failed")
+      return Error("Taks failed")
     }
     console.log("Method sucessfully completed")
     return result

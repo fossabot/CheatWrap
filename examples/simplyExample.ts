@@ -1,7 +1,4 @@
-import { config } from "dotenv"
-config()
-
-import CheatWrap from "./index"
+import CheatWrap from "../src/index"
 import Snoowrap from "snoowrap"
 
 const credentials = [
@@ -22,4 +19,5 @@ const main = async () => {
   const r = new CheatWrap(credentials)
   await r.run(getSweetCreatures)
 }
+
 main()
