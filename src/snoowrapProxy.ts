@@ -17,5 +17,5 @@ class SuperSnoowrap extends Snoowrap {
     return super.rawRequest(options)
   }
 }
-export {SuperSnoowrapOptions}
+export { SuperSnoowrapOptions }
 export default SuperSnoowrap
